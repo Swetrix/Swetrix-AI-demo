@@ -9,15 +9,6 @@ app = FastAPI()
 
 # period -> string
 
-def transform_data(data):
-    transformed = data
-    print(transformed)
-    transformed['yhat'] = transformed['yhat'].astype(list)
-    transformed['ds'] = transformed['ds'].astype(list)
-
-    transformed['ds'].map(lambda x: x.strftime("%Y-%m-%d %H:%M:%S"))
-    return transformed
-
 
 @app.post("/")
 async def get_data(request_data: ChartData):
