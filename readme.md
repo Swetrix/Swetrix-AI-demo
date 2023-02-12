@@ -58,5 +58,5 @@ To be continued...
 ## Deployment
 
 ```
-To be continued...
+uvicorn main:app --reload --port 3004
 ```
