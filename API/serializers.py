@@ -4,13 +4,19 @@ from datetime import datetime
 
 class Serializer:
     serialized_list = []
+    d = {
+        'day': 'd',
+        'week': 'w',
+        'month': 'm',
+        'hour': 'h',
+    }
 
     def __init__(self, field: str, frequency: str):
 
         self.serialized_data = {}
         self.__field = field
         self.lower_value, self.upper_value = self.min_max_fields
-        self.ts_format = self.get_format(frequency)
+        self.ts_format = self.get_format(self.d.get(frequency))
 
     def append_for_period(self, field, data: pd.DataFrame):
         data = data.rename(columns={'ds': 'x', 'yhat': field, 'yhat_lower': self.lower_value,
@@ -34,6 +40,6 @@ class Serializer:
 
     @staticmethod
     def get_format(frequency: str):
-        if frequency in ["d", "w", "m", "y"]:
+        if frequency in ["d", "w", "M"]:
             return "%Y-%m-%d"
         return "%Y-%m-%d %H:%M:%S"

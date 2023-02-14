@@ -5,6 +5,13 @@ from prophet.plot import plot_plotly, plot_components_plotly
 
 
 class Model:
+    d = {
+        'day': 'd',
+        'week': 'w',
+        'month': 'm',
+        'hour': 'h',
+    }
+
     def __init__(self, data: pd.DataFrame, period_to_forecast: int, frequency: str):
         """
         The main class for the data processing.
@@ -13,13 +20,13 @@ class Model:
         self.data = data
         self.model = Prophet()
         self.period_to_forecast = period_to_forecast
-        self.frequency = frequency
+        self.frequency = Model.d.get(frequency)
 
     def train(self):
         # fit the model
         self.model.fit(self.data)
         self.model.plot(self.model.predict(self.data))
-
+        print(self.frequency)
         future = self.model.make_future_dataframe(periods=self.period_to_forecast,
                                                   freq=self.frequency)
         forecast = self.model.predict(future)
