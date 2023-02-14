@@ -3,6 +3,7 @@ from API.models import ChartData
 from API.serializers import Serializer
 from Prediction.model import Model
 from Prediction.process_data import Data
+from fastapi.responses import Response
 
 app = FastAPI()
 
