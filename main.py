@@ -6,9 +6,13 @@ from Prediction.process_data import Data
 
 app = FastAPI()
 
+@app.middleware("http")
+async def add_cors_headers(request, call_next):
+    if request.method == "OPTIONS":
+        return Response(status_code=204)
 
-# period -> string
-
+    response = await call_next(request)
+    return response
 
 @app.post("/")
 async def get_data(request_data: ChartData):
