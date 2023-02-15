@@ -4,19 +4,13 @@ from datetime import datetime
 
 class Serializer:
     serialized_list = []
-    d = {
-        'day': 'd',
-        'week': 'w',
-        'month': 'm',
-        'hour': 'h',
-    }
 
     def __init__(self, field: str, frequency: str):
 
         self.serialized_data = {}
         self.__field = field
         self.lower_value, self.upper_value = self.min_max_fields
-        self.ts_format = self.get_format(self.d.get(frequency))
+        self.ts_format = self.get_format(frequency)
 
     def append_for_period(self, field, data: pd.DataFrame):
         data = data.rename(columns={'ds': 'x', 'yhat': field, 'yhat_lower': self.lower_value,
@@ -43,3 +37,14 @@ class Serializer:
         if frequency in ["d", "w", "M"]:
             return "%Y-%m-%d"
         return "%Y-%m-%d %H:%M:%S"
+
+    @staticmethod
+    def remove_duplicates(serialized_list):
+        seen_keys = set()
+        for d in serialized_list:
+            for key in list(d.keys()):
+                if key in seen_keys:
+                    del d[key]
+                else:
+                    seen_keys.add(key)
+        return serialized_list

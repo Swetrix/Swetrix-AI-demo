@@ -18,13 +18,13 @@ class ChartBase(BaseModel):
     def to_pandas(self):
         return pd.DataFrame({
             'x': self.x,
-            'sdur': self.sdur,
+            'visits': self.visits,
             'uniques': self.uniques,
-            'visits': self.visits
+            'sdur': self.sdur,
         })
 
     def keys(self):
-        return ['sdur', 'uniques', 'visits']
+        return ['visits', 'uniques', 'sdur']
 
 
 class ChartData(ChartBase):

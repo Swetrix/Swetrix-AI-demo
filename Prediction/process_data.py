@@ -59,8 +59,8 @@ class Data:
         self.sdur_with_ds['y'] = self.original_data["sdur"].astype(int)
 
     def process_data(self):
-        self.change_uniques_to_y()
         self.change_visits_to_y()
+        self.change_uniques_to_y()
         self.change_sdur_to_y()
 
     # generate thre dataframes for the model training
@@ -73,6 +73,6 @@ class Data:
         return [self.visits_with_ds, self.uniques_with_ds, self.sdur_with_ds]
 
     def clear_ds(self):
-        self.uniques_with_ds = self.uniques_with_ds.drop(columns=['ds'])
         self.visits_with_ds = self.visits_with_ds.drop(columns=['ds'])
+        self.uniques_with_ds = self.uniques_with_ds.drop(columns=['ds'])
         self.sdur_with_ds = self.sdur_with_ds.drop(columns=['ds'])
