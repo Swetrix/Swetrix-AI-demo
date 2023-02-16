@@ -6,6 +6,14 @@ from prophet.plot import plot_plotly, plot_components_plotly
 from Prediction.enums import Frequency
 
 
+def correctives_to_prediction(data: pd.DataFrame):
+    """
+    This function is used to correct the negative values in the prediction in case the Prophet model['floor'] does not
+    """
+    data['yhat'] = data.apply(lambda x: x['yhat_upper'] if x['yhat'] < 0 else x['yhat'], axis=1)
+    return data
+
+
 class Model:
 
     def __init__(self, data: pd.DataFrame, period_to_forecast: int, frequency: str):
@@ -32,8 +40,9 @@ class Model:
         It's very important to set the floor and the cap to the
         real values in order to get the best and the most appropriate results.
         """
-        future['floor'] = 0
+        #future['floor'] = 0
         forecast = self.model.predict(future)
-
+        forecast['floor'] = 0
         return_data = forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']][-self.period_to_forecast:]
+        return_data = correctives_to_prediction(return_data)
         return return_data
