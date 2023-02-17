@@ -2,7 +2,7 @@ class Frequency:
     values = {
         'day': 'd',
         'week': 'w',
-        'month': 'm',
+        'month': 'M',
         'hour': 'h',
     }
 
