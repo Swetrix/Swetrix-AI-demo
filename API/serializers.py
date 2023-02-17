@@ -48,3 +48,35 @@ class Serializer:
                 else:
                     seen_keys.add(key)
         return serialized_list
+
+    @staticmethod
+    def swap_visits_and_uniques(processed_data: list[dict]):
+        """
+        There is the possibility that the Prophet model will predict the uniques to be greater than the visits.
+        This function is used to swap the values in case this happens.
+
+        :param processed_data: The list of dictionaries that contains the data for the prediction.
+        :return: processed_data
+        """
+
+        visits = None
+        uniques = None
+
+        for d in processed_data:
+            if 'visits' in d:
+                visits = d['visits']
+            if 'uniques' in d:
+                uniques = d['uniques']
+
+        if visits is not None and uniques is not None:
+            for i in range(len(visits)):
+                if uniques[i] > visits[i]:
+                    uniques[i], visits[i] = visits[i], uniques[i]
+
+        for d in processed_data:
+            if 'visits' in d:
+                d['visits'] = visits
+            if 'uniques' in d:
+                d['uniques'] = uniques
+
+        return processed_data
