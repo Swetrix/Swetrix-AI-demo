@@ -8,9 +8,10 @@ from Prediction.enums import Frequency
 
 def correctives_to_prediction(data: pd.DataFrame):
     """
-    This function is used to correct the negative values in the prediction in case the Prophet model['floor'] does not
+    This function is used to correct the negative values in the prediction in case the Prophet model['floor'] does not +
+    using abs in case the Prophet model['cap'] does not work. :)
     """
-    data['yhat'] = data.apply(lambda x: x['yhat_upper'] if x['yhat'] < 0 else x['yhat'], axis=1)
+    data['yhat'] = data.apply(lambda x: abs(x['yhat_upper']) if x['yhat'] < 0 else x['yhat'], axis=1)
     return data
 
 
@@ -24,13 +25,12 @@ class Model:
         self.data = data
         self.model = Prophet()
         self.period_to_forecast = period_to_forecast
-        self.frequency = Frequency.get_frequency(frequency)
+        self.frequency = frequency
 
     def train(self):
         # fit the model
         self.model.fit(self.data)
         self.model.plot(self.model.predict(self.data))
-        print(self.frequency)
         future = self.model.make_future_dataframe(periods=self.period_to_forecast,
                                                   freq=self.frequency)
         """
@@ -40,7 +40,7 @@ class Model:
         It's very important to set the floor and the cap to the
         real values in order to get the best and the most appropriate results.
         """
-        #future['floor'] = 0
+        future['floor'] = 0
         forecast = self.model.predict(future)
         forecast['floor'] = 0
         return_data = forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']][-self.period_to_forecast:]
