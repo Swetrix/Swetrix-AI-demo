@@ -44,6 +44,8 @@ async def get_data(request_data: ChartData):
         ser.append_for_period(field, forecasted_data)
         serialized_list.append(ser.serialized_data)
 
-    processed_data = Serializer.remove_duplicates(serialized_list)
+    # Remove duplicates and swap visits and uniques in case the Prophet model predicts uniques to be greater
+    clear_data = Serializer.remove_duplicates(serialized_list)
+    processed_data = Serializer.swap_visits_and_uniques(clear_data)
 
     return processed_data
